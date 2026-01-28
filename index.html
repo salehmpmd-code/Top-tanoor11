@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منوی کافه حرفه‌ای | Coffee Lab</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap">
+    <style>
+        :root {
+            --primary-color: #8B4513;
+            --secondary-color: #D2691E;
+            --accent-color: #A0522D;
+            --light-color: #F5F5DC;
+            --dark-color: #3E2723;
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+            --border-radius: 20px;
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+        }
+
+        .dark-mode {
+            --primary-color: #D2691E;
+            --secondary-color: #8B4513;
+            --accent-color: #F5DEB3;
+            --light-color: #2C1810;
+            --dark-color: #F5F5DC;
+            --glass-bg: rgba(60, 35, 22, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: linear-gradient(135deg, #F5F5DC 0%, #DEB887 100%);
+            color: var(--dark-color);
+            min-height: 100vh;
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #3E2723 0%, #5D4037 100%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        /* Header Styles */
+        header {
+            padding: var(--spacing-md) 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: var(--glass-bg);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .logo i {
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .theme-toggle, .admin-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        .theme-toggle:hover, .admin-btn:hover {
+            transform: translateY(-3px);
+            background: var(--primary-color);
+            color: var(--light-color);
+        }
+
+        .controls {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: var(--spacing-xl) 0;
+            text-align: center;
+        }
+
+        .hero-content {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            animation: fadeIn 1s ease;
+        }
+
+        .hero h2 {
+            font-size: 2.2rem;
+            margin-bottom: var(--spacing-sm);
+            color: var(--primary-color);
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto var(--spacing-lg);
+        }
+
+        .special-offer {
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius);
+            margin-top: var(--spacing-lg);
+            position: relative;
+            overflow: hidden;
+            animation: pulse 2s infinite;
+        }
+
+        .special-offer h3 {
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-xs);
+            color: white;
+        }
+
+        .special-offer p {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 0;
+        }
+
+        /* Menu Categories */
+        .category-nav {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-xl);
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            padding: var(--spacing-sm) var(--spacing-md);
+            cursor: pointer;
+            color: var(--dark-color);
+            font-weight: 500;
+            transition: var(--transition);
+            backdrop-filter: blur(5px);
+        }
+
+        .category-btn.active, .category-btn:hover {
+            background: var(--primary-color);
+            color: var(--light-color);
+        }
+
+        /* Menu Items */
+        .menu-section {
+            margin-bottom: var(--spacing-xl);
+            display: none;
+            animation: slideUp 0.5s ease;
+        }
+
+        .menu-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-lg);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 2px solid var(--primary-color);
+            text-align: center;
+        }
+
+        .menu-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .menu-item {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .menu-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .menu-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .item-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .item-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+
+        .discount-badge {
+            background: #FF5722;
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: var(--spacing-xs);
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 0.9rem;
+            margin-left: 5px;
+        }
+
+        .item-description {
+            color: var(--dark-color);
+            line-height: 1.6;
+            margin-bottom: var(--spacing-md);
+            font-size: 0.95rem;
+        }
+
+        .item-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-tags {
+            display: flex;
+            gap: var(--spacing-xs);
+        }
+
+        .item-tag {
+            background: rgba(139, 69, 19, 0.2);
+            color: var(--primary-color);
+            padding: 0.2rem 0.6rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+        }
+
+        .item-rating {
+            color: #FFC107;
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            max-width: 500px;
+            height: 100vh;
+            background: var(--light-color);
+            color: var(--dark-color);
+            z-index: 1000;
+            padding: var(--spacing-xl);
+            overflow-y: auto;
+            transition: var(--transition);
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.2);
+        }
+
+        body.dark-mode .admin-panel {
+            background: #3E2723;
+        }
+
+        .admin-panel.active {
+            right: 0;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .admin-header h2 {
+            color: var(--primary-color);
+        }
+
+        .close-admin {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--dark-color);
+            cursor: pointer;
+        }
+
+        .admin-section {
+            margin-bottom: var(--spacing-lg);
+            padding: var(--spacing-md);
+            background: var(--glass-bg);
+            border-radius: var(--border-radius);
+        }
+
+        .admin-section h3 {
+            margin-bottom: var(--spacing-md);
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--dark-color);
+            font-family: 'Vazirmatn', sans-serif;
+        }
+
+      .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            font-family: 'Vazirmatn', sans-serif;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .login-form {
+            max-width: 400px;
+            margin: 10vh auto;
+            background: var(--glass-bg);
+            padding: var(--spacing-xl);
+            border-radius: var(--border-radius);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .login-form h2 {
+            margin-bottom: var(--spacing-lg);
+            color: var(--primary-color);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: var(--spacing-xl) 0;
+            margin-top: var(--spacing-xl);
+            border-top: 1px solid var(--glass-border);
+            color: var(--dark-color);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .menu-items {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: var(--spacing-md);
+            }
+            
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+            
+            .category-nav {
+                overflow-x: auto;
+                justify-content: flex-start;
+                padding-bottom: var(--spacing-sm);
+            }
+            
+            .admin-panel {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 var(--spacing-sm);
+            }
+            
+            .hero-content {
+                padding: var(--spacing-lg);
+            }
+            
+            .menu-item {
+                padding: var(--spacing-md);
+            }
+        }
+
+        /* Scroll Animations */
+        .scroll-animation {
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-coffee"></i>
+                    <h1>Coffee Lab</h1>
+                </div>
+                <div class="controls">
+                    <div class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </div>
+                    <div class="admin-btn" id="adminBtn">
+                        <i class="fas fa-user-cog"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h2>منوی کافه تخصصی Coffee Lab</h2>
+                <p>لذت نوشیدنی‌های ویژه و اسپشیالیتی در فضایی مدرن و آرامش‌بخش. با استفاده از بهترین دانه‌های قهوه از سراسر جهان، هر جرعه یک تجربه منحصر به فرد است.</p>
+                
+                <div class="special-offer" id="specialOffer">
+                    <h3>پیشنهاد ویژه امروز</h3>
+                    <p id="specialOfferText">قهوه کلد برو با طعم کارامل - ۲۰٪ تخفیف</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Category Navigation -->
+        <nav class="category-nav" id="categoryNav">
+            <button class="category-btn active" data-category="all">همه</button>
+            <button class="category-btn" data-category="hot-coffee">قهوه گرم</button>
+            <button class="category-btn" data-category="cold-coffee">قهوه سرد</button>
+            <button class="category-btn" data-category="tea">چای</button>
+            <button class="category-btn" data-category="dessert">دسر</button>
+            <button class="category-btn" data-category="breakfast">صبحانه</button>
+        </nav>
+
+        <!-- Menu Sections -->
+        <section id="menuSections">
+            <!-- Menu items will be dynamically generated here -->
+        </section>
+    </main>
+
+    <!-- Admin Panel -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <h2>پنل مدیریت منو</h2>
+            <button class="close-admin" id="closeAdmin">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <!-- Login Form -->
+        <div class="login-form" id="loginForm">
+            <h2>ورود به پنل مدیریت</h2>
+            <div class="form-group">
+                <label for="username">نام کاربری</label>
+                <input type="text" id="username" class="form-control" placeholder="نام کاربری">
+            </div>
+            <div class="form-group">
+                <label for="password">رمز عبور</label>
+                <input type="password" id="password" class="form-control" placeholder="رمز عبور">
+            </div>
+            <button class="btn" id="loginBtn">ورود</button>
+            <p id="loginError" style="color: red; margin-top: 1rem; display: none;">نام کاربری یا رمز عبور اشتباه است</p>
+        </div>
+        
+        <!-- Admin Content (Hidden until login) -->
+        <div id="adminContent" style="display: none;">
+            <!-- Special Offer Management -->
+            <div class="admin-section">
+                <h3>مدیریت پیشنهاد ویژه</h3>
+                <div class="form-group">
+                    <label for="specialOfferInput">پیشنهاد ویژه روز</label>
+                    <input type="text" id="specialOfferInput" class="form-control" placeholder="متن پیشنهاد ویژه">
+                </div>
+                <button class="btn" id="updateSpecialOffer">بروزرسانی پیشنهاد</button>
+            </div>
+            
+            <!-- Add New Item -->
+            <div class="admin-section">
+                <h3>افزودن آیتم جدید</h3>
+                <div class="form-group">
+                    <label for="itemName">نام آیتم</label>
+                    <input type="text" id="itemName" class="form-control" placeholder="نام آیتم">
+                </div>
+                <div class="form-group">
+                    <label for="itemDescription">توضیحات</label>
+                    <textarea id="itemDescription" class="form-control" placeholder="توضیحات آیتم" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="itemPrice">قیمت (تومان)</label>
+                    <input type="number" id="itemPrice" class="form-control" placeholder="قیمت">
+                </div>
+                <div class="form-group">
+                    <label for="itemCategory">دسته‌بندی</label>
+                    <select id="itemCategory" class="form-control">
+                        <option value="hot-coffee">قهوه گرم</option>
+                        <option value="cold-coffee">قهوه سرد</option>
+                        <option value="tea">چای</option>
+                        <option value="dessert">دسر</option>
+                        <option value="breakfast">صبحانه</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="itemDiscount">تخفیف (%)</label>
+                    <input type="number" id="itemDiscount" class="form-control" placeholder="درصد تخفیف" min="0" max="100">
+                </div>
+                <div class="form-group">
+                    <label for="itemTags">برچسب‌ها (با کاما جدا کنید)</label>
+                    <input type="text" id="itemTags" class="form-control" placeholder="مثال: ویژه, جدید, پرفروش">
+                </div>
+                <button class="btn" id="addItemBtn">افزودن آیتم</button>
+            </div>
+            
+            <!-- Manage Existing Items -->
+            <div class="admin-section">
+                <h3>مدیریت آیتم‌ها</h3>
+                <div id="adminItemsList">
+                    <!-- Items will be loaded here -->
+                </div>
+            </div>
+            
+            <!-- System Controls -->
+            <div class="admin-section">
+                <h3>کنترل‌های سیستم</h3>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button class="btn btn-secondary" id="resetDataBtn">بازنشانی داده‌ها</button>
+                    <button class="btn btn-secondary" id="exportDataBtn">خروجی داده‌ها</button>
+                    <button class="btn btn-danger" id="logoutBtn">خروج از پنل</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>کافه Coffee Lab | ساعت کار: ۸ صبح تا ۱۲ شب</p>
+            <p>تماس: ۰۲۱-۱۲۳۴۵۶۷۸ | آدرس: تهران، خیابان ولیعصر</p>
+            <p>© 2023 Coffee Lab - تمام حقوق محفوظ است</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initial Data
+        const defaultMenuItems = [
+            {
+                id: 1,
+                name: "اسپرسو",
+                description: "اسپرسو خالص و غلیظ با طعمی منحصر به فرد",
+                price: 45000,
+                category: "hot-coffee",
+                discount: 0,
+                tags: ["پرفروش", "کلاسیک"],
+                rating: 4.8
+            },
+            {
+                id: 2,
+                name: "لاته",
+                description: "ترکیب اسپرسو با شیر گرم و فوم شیر",
+                price: 65000,
+                category: "hot-coffee",
+                discount: 10,
+                tags: ["پرفروش", "فوم دار"],
+                rating: 4.7
+            },
+            {
+                id: 3,
+                name: "کاپوچینو",
+                description: "اسپرسو با نسبت برابر شیر و فوم شیر",
+                price: 60000,
+                category: "hot-coffee",
+                discount: 0,
+                tags: ["کلاسیک", "فوم دار"],
+                rating: 4.6
+            },
+            {
+                id: 4,
+                name: "کلد برو",
+                description: "قهوه سرد دم‌آوری شده با طعم کارامل",
+                price: 75000,
+                category: "cold-coffee",
+                discount: 20,
+                tags: ["ویژه", "تخفیف دار"],
+                rating: 4.9
+            },
+            {
+                id: 5,
+                name: "آفوگاتو",
+                description: "اسپرسو داغ با بستنی وانیلی",
+                price: 80000,
+                category: "dessert",
+                discount: 15,
+                tags: ["دسر", "مخلوط"],
+                rating: 4.8
+            },
+            {
+                id: 6,
+                name: "چای ماسالا",
+                description: "چای هندی با ادویه‌های خاص و شیر",
+                price: 40000,
+                category: "tea",
+                discount: 0,
+                tags: ["ادویه‌ای", "هندی"],
+                rating: 4.5
+            },
+            {
+                id: 7,
+                name: "صبحانه انگلیسی",
+                description: "تخم مرغ، بیکن، قارچ، لوبیا و نان تست",
+                price: 120000,
+                category: "breakfast",
+                discount: 10,
+                tags: ["کامل", "متنوع"],
+                rating: 4.7
+            },
+            {
+                id: 8,
+                name: "موکا",
+                description: "ترکیب اسپرسو، شیر، شکلات و خامه",
+                price: 70000,
+                category: "hot-coffee",
+                discount: 5,
+                tags: ["شکلاتی", "خامه‌ای"],
+                rating: 4.6
+            },
+            {
+                id: 9,
+                name: "آیس آمریکانو",
+                description: "اسپرسو با آب و یخ برای روزهای گرم",
+                price: 50000,
+                category: "cold-coffee",
+                discount: 0,
+                tags: ["سبک", "مناسب تابستان"],
+                rating: 4.4
+            }
+        ];
+
+        // App State
+        const state = {
+            menuItems: [],
+            specialOffer: "قهوه کلد برو با طعم کارامل - ۲۰٪ تخفیف",
+            darkMode: false,
+            isAdminLoggedIn: false,
+            nextItemId: 10
+        };
+
+      // DOM Elements
+        const themeToggle = document.getElementById('themeToggle');
+        const adminBtn = document.getElementById('adminBtn');
+        const adminPanel = document.getElementById('adminPanel');
+        const closeAdmin = document.getElementById('closeAdmin');
+        const categoryNav = document.getElementById('categoryNav');
+        const menuSections = document.getElementById('menuSections');
+        const specialOfferText = document.getElementById('specialOfferText');
+        const loginForm = document.getElementById('loginForm');
+        const adminContent = document.getElementById('adminContent');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginError = document.getElementById('loginError');
+        const specialOfferInput = document.getElementById('specialOfferInput');
+        const updateSpecialOfferBtn = document.getElementById('updateSpecialOffer');
+        const itemNameInput = document.getElementById('itemName');
+        const itemDescriptionInput = document.getElementById('itemDescription');
+        const itemPriceInput = document.getElementById('itemPrice');
+        const itemCategoryInput = document.getElementById('itemCategory');
+        const itemDiscountInput = document.getElementById('itemDiscount');
+        const itemTagsInput = document.getElementById('itemTags');
+        const addItemBtn = document.getElementById('addItemBtn');
+        const adminItemsList = document.getElementById('adminItemsList');
+        const resetDataBtn = document.getElementById('resetDataBtn');
+        const exportDataBtn = document.getElementById('exportDataBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // Initialize App
+        function initApp() {
+            loadDataFromStorage();
+            renderMenuItems();
+            setupEventListeners();
+            setupScrollAnimations();
+            updateSpecialOfferDisplay();
+        }
+
+        // Load data from localStorage or use defaults
+        function loadDataFromStorage() {
+            const savedMenuItems = localStorage.getItem('coffeeLabMenuItems');
+            const savedSpecialOffer = localStorage.getItem('coffeeLabSpecialOffer');
+            const savedDarkMode = localStorage.getItem('coffeeLabDarkMode');
+            const savedNextId = localStorage.getItem('coffeeLabNextId');
+            
+            if (savedMenuItems) {
+                state.menuItems = JSON.parse(savedMenuItems);
+            } else {
+                state.menuItems = [...defaultMenuItems];
+                saveMenuItemsToStorage();
+            }
+            
+            if (savedSpecialOffer) {
+                state.specialOffer = savedSpecialOffer;
+            }
+            
+            if (savedDarkMode === 'true') {
+                state.darkMode = true;
+                document.body.classList.add('dark-mode');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+            
+            if (savedNextId) {
+                state.nextItemId = parseInt(savedNextId);
+            }
+        }
+
+        // Save menu items to localStorage
+        function saveMenuItemsToStorage() {
+            localStorage.setItem('coffeeLabMenuItems', JSON.stringify(state.menuItems));
+            localStorage.setItem('coffeeLabNextId', state.nextItemId.toString());
+        }
+
+        // Save special offer to localStorage
+        function saveSpecialOfferToStorage() {
+            localStorage.setItem('coffeeLabSpecialOffer', state.specialOffer);
+        }
+
+        // Save theme preference to localStorage
+        function saveThemeToStorage() {
+            localStorage.setItem('coffeeLabDarkMode', state.darkMode.toString());
+        }
+
+        // Render menu items based on category
+        function renderMenuItems(category = 'all') {
+            menuSections.innerHTML = '';
+            
+            // Get unique categories
+            const categories = ['all', ...new Set(state.menuItems.map(item => item.category))];
+            
+            // Create section for each category
+            categories.forEach(cat => {
+                if (cat === 'all' && category !== 'all') return;
+                
+                const categoryItems = category === 'all' || cat === category 
+                    ? state.menuItems.filter(item => category === 'all' || item.category === category)
+                    : state.menuItems.filter(item => item.category === cat);
+                
+                if (categoryItems.length === 0) return;
+                
+                // Translate category names to Persian
+                const categoryNames = {
+                    'all': 'همه',
+                    'hot-coffee': 'قهوه گرم',
+                    'cold-coffee': 'قهوه سرد',
+                    'tea': 'چای',
+                    'dessert': 'دسر',
+                    'breakfast': 'صبحانه'
+                };
+                
+                const section = document.createElement('div');
+                section.className = `menu-section ${category === 'all' || cat === category ? 'active' : ''}`;
+                section.id = `section-${cat}`;
+                
+                let itemsHTML = '';
+                categoryItems.forEach(item => {
+                    const finalPrice = item.discount > 0 
+                        ? item.price * (1 - item.discount / 100)
+                        : item.price;
+                    
+                    const discountBadge = item.discount > 0 
+                        ? `<span class="discount-badge">${item.discount}% تخفیف</span>`
+                        : '';
+                    
+                    const originalPrice = item.discount > 0 
+                        ? `<span class="original-price">${item.price.toLocaleString()} تومان</span>`
+                        : '';
+                    
+                    const tagsHTML = item.tags.map(tag => `<span class="item-tag">${tag}</span>`).join('');
+                    
+                    const ratingStars = '★'.repeat(Math.floor(item.rating)) + '☆'.repeat(5 - Math.floor(item.rating));
+                    
+                    itemsHTML += `
+                        <div class="menu-item scroll-animation" data-id="${item.id}">
+                            <div class="item-header">
+                                <h3 class="item-title">${item.name}</h3>
+                                <div class="item-price">
+                                    ${discountBadge}
+                                    ${Math.round(finalPrice).toLocaleString()} تومان
+                                    ${originalPrice}
+                                </div>
+                            </div>
+                            <p class="item-description">${item.description}</p>
+                            <div class="item-footer">
+                                <div class="item-tags">${tagsHTML}</div>
+                                <div class="item-rating">${ratingStars} (${item.rating})</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                section.innerHTML = `
+                    <h2 class="section-title">${categoryNames[cat]}</h2>
+                    <div class="menu-items">
+                        ${itemsHTML}
+                    </div>
+                `;
+                
+                menuSections.appendChild(section);
+            });
+            
+            // Trigger scroll animations after rendering
+            setTimeout(setupScrollAnimations, 100);
+        }
+
+        // Update special offer display
+        function updateSpecialOfferDisplay() {
+            specialOfferText.textContent = state.specialOffer;
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Theme toggle
+            themeToggle.addEventListener('click', () => {
+                state.darkMode = !state.darkMode;
+                document.body.classList.toggle('dark-mode', state.darkMode);
+                themeToggle.innerHTML = state.darkMode 
+                    ? '<i class="fas fa-sun"></i>' 
+                    : '<i class="fas fa-moon"></i>';
+                saveThemeToStorage();
+            });
+
+            // Admin panel toggle
+            adminBtn.addEventListener('click', () => {
+                adminPanel.classList.add('active');
+                // Reset login form if not logged in
+                if (!state.isAdminLoggedIn) {
+                    loginForm.style.display = 'block';
+                    adminContent.style.display = 'none';
+                    usernameInput.value = '';
+                    passwordInput.value = '';
+                    loginError.style.display = 'none';
+                }
+            });
+
+            // Close admin panel
+            closeAdmin.addEventListener('click', () => {
+                adminPanel.classList.remove('active');
+            });
+
+            // Category navigation
+            categoryNav.addEventListener('click', (e) => {
+                if (e.target.classList.contains('category-btn')) {
+                    // Update active button
+                    document.querySelectorAll('.category-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    e.target.classList.add('active');
+                    
+                    // Render items for selected category
+                    const category = e.target.dataset.category;
+                    renderMenuItems(category);
+                }
+            });
+
+            // Login functionality
+            loginBtn.addEventListener('click', () => {
+                const username = usernameInput.value.trim();
+                const password = passwordInput.value.trim();
+                
+                if (username === 'matin' && password === '1025') {
+                    state.isAdminLoggedIn = true;
+                    loginForm.style.display = 'none';
+                    adminContent.style.display = 'block';
+                    loginError.style.display = 'none';
+                    loadAdminItems();
+                } else {
+                    loginError.style.display = 'block';
+                }
+            });
+
+            // Update special offer
+            updateSpecialOfferBtn.addEventListener('click', () => {
+                const newOffer = specialOfferInput.value.trim();
+                if (newOffer) {
+                    state.specialOffer = newOffer;
+                    updateSpecialOfferDisplay();
+                    saveSpecialOfferToStorage();
+                    specialOfferInput.value = '';
+                    
+                    // Show success feedback
+                    alert('پیشنهاد ویژه با موفقیت بروزرسانی شد');
+                }
+            });
+
+            // Add new item
+            addItemBtn.addEventListener('click', () => {
+                const name = itemNameInput.value.trim();
+                const description = itemDescriptionInput.value.trim();
+                const price = parseInt(itemPriceInput.value);
+                const category = itemCategoryInput.value;
+                const discount = parseInt(itemDiscountInput.value) || 0;
+                const tags = itemTagsInput.value.split(',').map(tag => tag.trim()).filter(tag => tag);
+                
+                if (!name || !description || !price) {
+                    alert('لطفا اطلاعات ضروری را وارد کنید');
+                    return;
+                }
+                
+                const newItem = {
+                    id: state.nextItemId++,
+                    name,
+                    description,
+                    price,
+                    category,
+                    discount,
+                    tags: tags.length > 0 ? tags : ['جدید'],
+                    rating: 4.5
+                };
+                
+                state.menuItems.push(newItem);
+                saveMenuItemsToStorage();
+                renderMenuItems();
+                loadAdminItems();
+                
+                // Clear form
+                itemNameInput.value = '';
+                itemDescriptionInput.value = '';
+                itemPriceInput.value = '';
+                itemDiscountInput.value = '';
+                itemTagsInput.value = '';
+                
+                // Show success feedback
+                alert('آیتم جدید با موفقیت اضافه شد');
+            });
+
+            // Reset data
+            resetDataBtn.addEventListener('click', () => {
+                if (confirm('آیا از بازنشانی داده‌ها به حالت اولیه مطمئن هستید؟')) {
+                    localStorage.clear();
+                    state.menuItems = [...defaultMenuItems];
+                    state.specialOffer = "قهوه کلد برو با طعم کارامل - ۲۰٪ تخفیف";
+                    state.nextItemId = 10;
+                    saveMenuItemsToStorage();
+                    saveSpecialOfferToStorage();
+                    renderMenuItems();
+                    updateSpecialOfferDisplay();
+                    loadAdminItems();
+                    alert('داده‌ها با موفقیت بازنشانی شدند');
+                }
+            });
+
+            // Export data
+            exportDataBtn.addEventListener('click', () => {
+                const data = {
+                    menuItems: state.menuItems,
+                    specialOffer: state.specialOffer,
+                    exportDate: new Date().toLocaleString('fa-IR')
+                };
+                
+                const dataStr = JSON.stringify(data, null, 2);
+                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                
+                const exportFileDefaultName = 'coffee-lab-menu-data.json';
+                
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', exportFileDefaultName);
+                linkElement.click();
+            });
+
+            // Logout
+            logoutBtn.addEventListener('click', () => {
+                state.isAdminLoggedIn = false;
+                adminContent.style.display = 'none';
+                loginForm.style.display = 'block';
+                adminPanel.classList.remove('active');
+            });
+
+            // Allow Enter key to submit login form
+            passwordInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    loginBtn.click();
+                }
+            });
+        }
+
+        // Load items for admin panel
+        function loadAdminItems() {
+            adminItemsList.innerHTML = '';
+            
+            state.menuItems.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'admin-item';
+                itemElement.style.cssText = `
+                    padding: 1rem;
+                    margin-bottom: 1rem;
+                    background: rgba(255,255,255,0.1);
+                    border-radius: 10px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                `;
+                
+                itemElement.innerHTML = `
+                    <div>
+                        <strong>${item.name}</strong>
+                        <div style="font-size: 0.9rem; color: #666;">${item.category} - ${item.price.toLocaleString()} تومان</div>
+                    </div>
+                    <button class="btn btn-danger delete-item-btn" data-id="${item.id}" style="padding: 0.4rem 0.8rem; font-size: 0.9rem;">
+                        حذف
+                    </button>
+                `;
+                
+                adminItemsList.appendChild(itemElement);
+            });
+            
+            // Add event listeners to delete buttons
+            document.querySelectorAll('.delete-item-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = parseInt(e.target.dataset.id);
+                    if (confirm('آیا از حذف این آیتم مطمئن هستید؟')) {
+                        state.menuItems = state.menuItems.filter(item => item.id !== id);
+                        saveMenuItemsToStorage();
+                        renderMenuItems();
+                        loadAdminItems();
+                    }
+                });
+            });
+        }
+
+        // Setup scroll animations for menu items
+        function setupScrollAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
+            
+            document.querySelectorAll('.menu-item').forEach(item => {
+                observer.observe(item);
+            });
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
