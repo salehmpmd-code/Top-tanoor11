@@ -228,12 +228,12 @@
             background: var(--glass-bg);
             backdrop-filter: blur(10px);
             border-radius: var(--border-radius);
-            padding: var(--spacing-lg);
             border: 1px solid var(--glass-border);
             box-shadow: var(--shadow);
             transition: var(--transition);
             opacity: 0;
             transform: translateY(20px);
+            overflow: hidden;
         }
 
         .menu-item.visible {
@@ -244,6 +244,17 @@
         .menu-item:hover {
             transform: translateY(-10px);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .item-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .item-content {
+            padding: var(--spacing-lg);
         }
 
         .item-header {
@@ -388,7 +399,42 @@
             font-family: 'Vazirmatn', sans-serif;
         }
 
-      .btn {
+        .image-upload-container {
+            position: relative;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 150px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-top: var(--spacing-xs);
+            border: 2px dashed var(--glass-border);
+            display: none;
+        }
+
+        .image-preview.active {
+            display: block;
+        }
+
+        .upload-btn {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            margin-top: var(--spacing-xs);
+            transition: var(--transition);
+        }
+
+        .upload-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        .btn {
             background: var(--primary-color);
             color: white;
             border: none;
@@ -435,6 +481,29 @@
         .login-form h2 {
             margin-bottom: var(--spacing-lg);
             color: var(--primary-color);
+        }
+
+        /* Admin Items List */
+        .admin-item {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-item-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-left: 1rem;
+        }
+
+        .admin-item-info {
+            flex: 1;
         }
 
         /* Footer */
@@ -493,6 +562,18 @@
             .admin-panel {
                 max-width: 100%;
             }
+            
+            .admin-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .admin-item-image {
+                margin-left: 0;
+                margin-bottom: 1rem;
+                width: 100%;
+                height: 100px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -504,7 +585,7 @@
                 padding: var(--spacing-lg);
             }
             
-            .menu-item {
+            .item-content {
                 padding: var(--spacing-md);
             }
         }
@@ -636,6 +717,18 @@
                     <label for="itemTags">برچسب‌ها (با کاما جدا کنید)</label>
                     <input type="text" id="itemTags" class="form-control" placeholder="مثال: ویژه, جدید, پرفروش">
                 </div>
+                
+                <!-- Image Upload -->
+                <div class="form-group">
+                    <label>عکس آیتم</label>
+                    <div class="image-upload-container">
+                        <input type="file" id="itemImage" accept="image/*" style="display: none;">
+                        <div class="upload-btn" id="uploadImageBtn">انتخاب عکس</div>
+                        <img id="imagePreview" class="image-preview" alt="پیش‌نمایش عکس">
+                        <p style="font-size: 0.8rem; margin-top: 5px; color: #666;">حداکثر حجم: 1MB - فرمت‌های مجاز: JPG, PNG</p>
+                    </div>
+                </div>
+                
                 <button class="btn" id="addItemBtn">افزودن آیتم</button>
             </div>
             
@@ -669,6 +762,19 @@
     </footer>
 
     <script>
+        // Base64 images for default items
+        const defaultImages = {
+            'اسپرسو': 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjOEI0NTEzIi8+PGcgZmlsbD0iI0QyNjkxRSI+PGNpcmNsZSBjeD0iMTUwIiBjeT0iMTAwIiByPSI2MCIvPjxjaXJjbGUgY3g9IjE1MCIgY3k9IjEwMCIgcj0iMzAiLz48L2c+PC9zdmc+',
+            'لاته': 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRkZGN0Q5Ii8+PGcgZmlsbD0iIzhCNDUxMyI+PGNpcmNsZSBjeD0iMTUwIiBjeT0iMTAwIiByPSI2MCIvPjxyZWN0IHg9IjkwIiB5PSIxNDAiIHdpZHRoPSIxMjAiIGhlaWdodD0iMjAiIHJ4PSIxMCIvPjwvZz48L3N2Zz4=',
+            'کاپوچینو': 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRkZGN0Q5Ii8+PGcgZmlsbD0iIzhCNDUxMyI+PGNpcmNsZSBjeD0iMTUwIiBjeT0iMTAwIiByPSI2MCIvPjxyZWN0IHg9IjkwIiB5PSIxNDAiIHdpZHRoPSIxMjAiIGhlaWdodD0iMjAiIHJ4PSIxMCIvPjwvZz48Y2lyY2xlIGN4PSIxNTAiIGN5PSI2MCIgcj0iMzAiIGZpbGw9IiNGRkZGRkYiIG9wYWNpdHk9IjAuOCIvPjwvc3ZnPg==',
+            'کلد برو': 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjM0UyNzIzIi8+PGcgZmlsbD0iIzhCNDUxMyI+PHJlY3QgeD0iMTAwIiB5PSI1MCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMjAiIHJ4PSIxNSIvPjxjaXJjbGUgY3g9IjE1MCIgY3k9IjYwIiByPSIxNSIvPjwvZz48L3N2Zz4=',
+            'آفوگاتو': 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjM0UyNzIzIi8+PGcgZmlsbD0iI0ZGRkZGRiI+PGNpcmNsZSBjeD0iMTUwIiBjeT0iNzAiIHI9IjQwIi8+PHJlY3QgeD0iMTEwIiB5PSIxMjAiIHdpZHRoPSI4MCIgaGVpZ2h0PSI0MCIgcng9IjUiLz48L2c+PC9zdmc+',
+            'چای ماسالا': 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjQzY4MjQxIi8+PGcgZmlsbD0iI0QyNjkxRSI+PHJlY3QgeD0iMTAwIiB5PSI2MCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI4MCIgcng9IjEwIi8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iNjAiIHI9IjIwIi8+PC9nPjwvc3ZnPg==',
+            'صبحانه انگلیسی': 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjRkZGN0Q5Ii8+PGcgZmlsbD0iI0QyNjkxRSI+PHJlY3QgeD0iODAiIHk9IjUwIiB3aWR0aD0iMTQwIiBoZWlnaHQ9IjEwMCIgcng9IjEwIi8+PGNpcmNsZSBjeD0iMTAwIiBjeT0iODAiIHI9IjIwIiBmaWxsPSIjRkZGN0Q5Ii8+PHJlY3QgeD0iMTMwIiB5PSI3MCIgd2lkdGg9IjQwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjOEI0NTEzIi8+PC9nPjwvc3ZnPg==',
+            'موکا': 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjM0UyNzIzIi8+PGcgZmlsbD0iIzhCNDUxMyI+PGNpcmNsZSBjeD0iMTUwIiBjeT0iMTAwIiByPSI2MCIvPjxyZWN0IHg9IjkwIiB5PSIxNDAiIHdpZHRoPSIxMjAiIGhlaWdodD0iMjAiIHJ4PSIxMCIvPjwvZz48Y2lyY2xlIGN4PSIxNTAiIGN5PSI2MCIgcj0iMjUiIGZpbGw9IiM1RjRFMzciLz48L3N2Zz4=',
+            'آیس آمریکانو': 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjQzZFRUZGIi8+PGcgZmlsbD0iIzhCNDUxMyI+PHJlY3QgeD0iMTAwIiB5PSI2MCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSI4MCIgcng9IjEwIi8+PGNpcmNsZSBjeD0iMTUwIiBjeT0iNjAiIHI9IjIwIi8+PC9nPjwvc3ZnPg=='
+        };
+
         // Initial Data
         const defaultMenuItems = [
             {
@@ -679,7 +785,8 @@
                 category: "hot-coffee",
                 discount: 0,
                 tags: ["پرفروش", "کلاسیک"],
-                rating: 4.8
+                rating: 4.8,
+                image: defaultImages['اسپرسو']
             },
             {
                 id: 2,
@@ -689,7 +796,8 @@
                 category: "hot-coffee",
                 discount: 10,
                 tags: ["پرفروش", "فوم دار"],
-                rating: 4.7
+                rating: 4.7,
+                image: defaultImages['لاته']
             },
             {
                 id: 3,
@@ -699,7 +807,8 @@
                 category: "hot-coffee",
                 discount: 0,
                 tags: ["کلاسیک", "فوم دار"],
-                rating: 4.6
+                rating: 4.6,
+                image: defaultImages['کاپوچینو']
             },
             {
                 id: 4,
@@ -709,7 +818,8 @@
                 category: "cold-coffee",
                 discount: 20,
                 tags: ["ویژه", "تخفیف دار"],
-                rating: 4.9
+                rating: 4.9,
+                image: defaultImages['کلد برو']
             },
             {
                 id: 5,
@@ -719,7 +829,8 @@
                 category: "dessert",
                 discount: 15,
                 tags: ["دسر", "مخلوط"],
-                rating: 4.8
+                rating: 4.8,
+                image: defaultImages['آفوگاتو']
             },
             {
                 id: 6,
@@ -729,7 +840,8 @@
                 category: "tea",
                 discount: 0,
                 tags: ["ادویه‌ای", "هندی"],
-                rating: 4.5
+                rating: 4.5,
+                image: defaultImages['چای ماسالا']
             },
             {
                 id: 7,
@@ -739,7 +851,8 @@
                 category: "breakfast",
                 discount: 10,
                 tags: ["کامل", "متنوع"],
-                rating: 4.7
+                rating: 4.7,
+                image: defaultImages['صبحانه انگلیسی']
             },
             {
                 id: 8,
@@ -749,7 +862,8 @@
                 category: "hot-coffee",
                 discount: 5,
                 tags: ["شکلاتی", "خامه‌ای"],
-                rating: 4.6
+                rating: 4.6,
+                image: defaultImages['موکا']
             },
             {
                 id: 9,
@@ -759,7 +873,8 @@
                 category: "cold-coffee",
                 discount: 0,
                 tags: ["سبک", "مناسب تابستان"],
-                rating: 4.4
+                rating: 4.4,
+                image: defaultImages['آیس آمریکانو']
             }
         ];
 
@@ -769,10 +884,11 @@
             specialOffer: "قهوه کلد برو با طعم کارامل - ۲۰٪ تخفیف",
             darkMode: false,
             isAdminLoggedIn: false,
-            nextItemId: 10
+            nextItemId: 10,
+            currentImageBase64: null
         };
 
-      // DOM Elements
+        // DOM Elements
         const themeToggle = document.getElementById('themeToggle');
         const adminBtn = document.getElementById('adminBtn');
         const adminPanel = document.getElementById('adminPanel');
@@ -794,6 +910,9 @@
         const itemCategoryInput = document.getElementById('itemCategory');
         const itemDiscountInput = document.getElementById('itemDiscount');
         const itemTagsInput = document.getElementById('itemTags');
+        const itemImageInput = document.getElementById('itemImage');
+        const uploadImageBtn = document.getElementById('uploadImageBtn');
+        const imagePreview = document.getElementById('imagePreview');
         const addItemBtn = document.getElementById('addItemBtn');
         const adminItemsList = document.getElementById('adminItemsList');
         const resetDataBtn = document.getElementById('resetDataBtn');
@@ -854,6 +973,21 @@
             localStorage.setItem('coffeeLabDarkMode', state.darkMode.toString());
         }
 
+        // Convert image file to Base64
+        function convertImageToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        // Get default image based on item name
+        function getDefaultImage(itemName) {
+            return defaultImages[itemName] || defaultImages['اسپرسو'];
+        }
+
         // Render menu items based on category
         function renderMenuItems(category = 'all') {
             menuSections.innerHTML = '';
@@ -905,18 +1039,21 @@
                     
                     itemsHTML += `
                         <div class="menu-item scroll-animation" data-id="${item.id}">
-                            <div class="item-header">
-                                <h3 class="item-title">${item.name}</h3>
-                                <div class="item-price">
-                                    ${discountBadge}
-                                    ${Math.round(finalPrice).toLocaleString()} تومان
-                                    ${originalPrice}
+                            <img src="${item.image || getDefaultImage(item.name)}" alt="${item.name}" class="item-image">
+                            <div class="item-content">
+                                <div class="item-header">
+                                    <h3 class="item-title">${item.name}</h3>
+                                    <div class="item-price">
+                                        ${discountBadge}
+                                        ${Math.round(finalPrice).toLocaleString()} تومان
+                                        ${originalPrice}
+                                    </div>
                                 </div>
-                            </div>
-                            <p class="item-description">${item.description}</p>
-                            <div class="item-footer">
-                                <div class="item-tags">${tagsHTML}</div>
-                                <div class="item-rating">${ratingStars} (${item.rating})</div>
+                                <p class="item-description">${item.description}</p>
+                                <div class="item-footer">
+                                    <div class="item-tags">${tagsHTML}</div>
+                                    <div class="item-rating">${ratingStars} (${item.rating})</div>
+                                </div>
                             </div>
                         </div>
                     `;
@@ -986,6 +1123,39 @@
                 }
             });
 
+            // Image upload
+            uploadImageBtn.addEventListener('click', () => {
+                itemImageInput.click();
+            });
+
+            // Preview image when selected
+            itemImageInput.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    // Check file size (max 1MB)
+                    if (file.size > 1024 * 1024) {
+                        alert('حجم فایل باید کمتر از 1MB باشد');
+                        return;
+                    }
+                    
+                    // Check file type
+                    if (!file.type.match('image/jpeg') && !file.type.match('image/png')) {
+                        alert('فقط فایل‌های JPG و PNG مجاز هستند');
+                        return;
+                    }
+                    
+                    try {
+                        const base64 = await convertImageToBase64(file);
+                        state.currentImageBase64 = base64;
+                        imagePreview.src = base64;
+                        imagePreview.classList.add('active');
+                    } catch (error) {
+                        alert('خطا در بارگذاری عکس');
+                        console.error(error);
+                    }
+                }
+            });
+
             // Login functionality
             loginBtn.addEventListener('click', () => {
                 const username = usernameInput.value.trim();
@@ -1017,7 +1187,7 @@
             });
 
             // Add new item
-            addItemBtn.addEventListener('click', () => {
+            addItemBtn.addEventListener('click', async () => {
                 const name = itemNameInput.value.trim();
                 const description = itemDescriptionInput.value.trim();
                 const price = parseInt(itemPriceInput.value);
@@ -1030,6 +1200,12 @@
                     return;
                 }
                 
+                // Use uploaded image or default image
+                let image = state.currentImageBase64;
+                if (!image) {
+                    image = getDefaultImage(name);
+                }
+                
                 const newItem = {
                     id: state.nextItemId++,
                     name,
@@ -1038,7 +1214,8 @@
                     category,
                     discount,
                     tags: tags.length > 0 ? tags : ['جدید'],
-                    rating: 4.5
+                    rating: 4.5,
+                    image: image
                 };
                 
                 state.menuItems.push(newItem);
@@ -1052,6 +1229,10 @@
                 itemPriceInput.value = '';
                 itemDiscountInput.value = '';
                 itemTagsInput.value = '';
+                itemImageInput.value = '';
+                imagePreview.src = '';
+                imagePreview.classList.remove('active');
+                state.currentImageBase64 = null;
                 
                 // Show success feedback
                 alert('آیتم جدید با موفقیت اضافه شد');
@@ -1064,6 +1245,7 @@
                     state.menuItems = [...defaultMenuItems];
                     state.specialOffer = "قهوه کلد برو با طعم کارامل - ۲۰٪ تخفیف";
                     state.nextItemId = 10;
+                    state.currentImageBase64 = null;
                     saveMenuItemsToStorage();
                     saveSpecialOfferToStorage();
                     renderMenuItems();
@@ -1115,20 +1297,13 @@
             state.menuItems.forEach(item => {
                 const itemElement = document.createElement('div');
                 itemElement.className = 'admin-item';
-                itemElement.style.cssText = `
-                    padding: 1rem;
-                    margin-bottom: 1rem;
-                    background: rgba(255,255,255,0.1);
-                    border-radius: 10px;
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                `;
                 
                 itemElement.innerHTML = `
-                    <div>
-                        <strong>${item.name}</strong>
+                    <img src="${item.image || getDefaultImage(item.name)}" alt="${item.name}" class="admin-item-image">
+                    <div class="admin-item-info">
+                        <div><strong>${item.name}</strong></div>
                         <div style="font-size: 0.9rem; color: #666;">${item.category} - ${item.price.toLocaleString()} تومان</div>
+                        ${item.discount > 0 ? `<div style="font-size: 0.8rem; color: #FF5722;">${item.discount}% تخفیف</div>` : ''}
                     </div>
                     <button class="btn btn-danger delete-item-btn" data-id="${item.id}" style="padding: 0.4rem 0.8rem; font-size: 0.9rem;">
                         حذف
